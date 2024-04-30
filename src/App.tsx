@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
 
 function App() {
+  const [pingResult, setPingResult] = useState('')
+
+  const _window = window as any
+  const ipcBridges = _window.ipcBridges
+  const systemInfo = ipcBridges.systemInfo
+  const testPing = ipcBridges.testPing
+
+  const onPingClick = async () => {
+    const res = await testPing()
+    console.log(res)
+    setPingResult(res)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello Electron</h1>
+      <div>
+        <div>versions</div>
+        <div>node: {systemInfo.node}</div>
+        <div>chrome: {systemInfo.chrome}</div>
+        <div>electron: {systemInfo.electron}</div>
+
+        <div style={{ paddingTop: 8 }}>
+          <div>pingResult: {pingResult}</div>
+        </div>
+        <button onClick={onPingClick}>ping</button>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
